@@ -52,46 +52,46 @@
   </style>
 </head>
 <body>
-<input type="checkbox" />首台
-<!--<script>-->
-<!--  let eles = [];-->
+<!--<input type="checkbox" />首台-->
+<script>
+  let eles = [];
 
-<!--  function createEle(eles, len) {-->
-<!--    for (let i = 0; i < len; i++) {-->
-<!--      eles.push(i);-->
-<!--    }-->
-<!--  }-->
+  function createEle(eles, len) {
+    for (let i = 0; i < len; i++) {
+      eles.push(i);
+    }
+  }
 
-<!--  createEle(eles, 1001);-->
+  createEle(eles, 1001);
 
-<!--  let timechunk = function(data, fn, count, wait) {-->
-<!--    let timer;-->
-<!--    let start = function() {-->
-<!--      for (let i = 0; i < Math.min(count | 1, data.length); i++) {-->
-<!--        let temp = data.shift();-->
-<!--        fn(temp);-->
-<!--      }-->
-<!--    };-->
-<!--    return function() {-->
-<!--      timer = setInterval(function() {-->
-<!--        if (data.length === 0) {-->
-<!--          clearInterval(timer);-->
-<!--        }-->
-<!--        start();-->
-<!--      }, wait);-->
-<!--    };-->
-<!--  };-->
+  let timechunk = function(data, fn, count, wait) {
+    let timer;
+    let start = function() {
+      for (let i = 0; i < Math.min(count | 1, data.length); i++) {
+        let temp = data.shift();
+        fn(temp);
+      }
+    };
+    return function() {
+      timer = setInterval(function() {
+        if (data.length === 0) {
+          clearInterval(timer);
+        }
+        start();
+      }, wait);
+    };
+  };
 
-<!--  let render = timechunk(eles, function(n) {-->
-<!--    let div = document.createElement("div");-->
-<!--    div.innerHTML = n;-->
-<!--    div.style.backgroundColor = `rgb(${~~(Math.random() * 255)}, ${~~(Math.random() * 255)},${~~(Math.random() * 255)})`-->
-<!--    document.body.appendChild(div);-->
-<!--  }, 11, 1);-->
+  let render = timechunk(eles, function(n) {
+    let div = document.createElement("div");
+    div.innerHTML = n;
+    div.style.backgroundColor = `rgb(${~~(Math.random() * 255)}, ${~~(Math.random() * 255)},${~~(Math.random() * 255)})`
+    document.body.appendChild(div);
+  }, 11, 1);
 
-<!--  render();-->
+  render();
 
 
-<!--</script>-->
+</script>
 </body>
 </html>
