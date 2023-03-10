@@ -21,3 +21,4 @@ function onChange(me, value, oldValue) {
   EMR.getDocument().getNodesByCode("g1IK5owEx4")[0].setValue(score);
   EMR.getDocument().getNodesByCode("r8qvauurPe")[0].setValue(score);
 }
+JSON.stringify()

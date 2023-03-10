@@ -5,6 +5,9 @@
 * dcNote：大成笔记。
 
 
+获取段落模板列表 patient/patient/document/template/tree
+
+
 003 介入手术护理记录单  护理记录部件编码
 
 pNeC3McLs

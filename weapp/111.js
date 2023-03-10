@@ -1,31 +1,68 @@
-//${氧流量}*1000*(${浓度}/100)*${时长}* (1/150)
-let str = 0;
-let defaultValue = "166607"
-if (str) {
-  if (str.includes('$')) {
-    str = str.replace("${氧流量}", o2FlowVal + "").replace("${浓度}", gasConcentration + "").replace("${时长}", duration + "");
-  }
-  try {
-    value = eval(str);
-    console.log(Number(value.toFixed(2)));
-  } catch (e) {
-    console.log("eee")
-    console.log(defaultValue);
-  }
+VNode.$bus.$emit("add-copy-doc", {
+  show: true,
+  handler: this.adDoc,
+  scope: this
+});
+VNode.$bus.$emit("delete-copy-doc", {
+  show: true,
+  handler: this.delDoc,
+  scope: this
+});
+}
+// 点击执行的代码
+function delDoc() {
+  let emrDocument = EMR.getDocument();
+  EMR.editor.execute("execFn", {
+    value: {
+      fn: function () {
+        let tableArrStr = ['table1', 'table2', 'table3', 'table4'];
+        for (let i = 3; i >= 0; i--) {
+          if (emrDocument.getTablesByCode(tableArrStr[i])[0]) {
+            emrDocument.getTablesByCode(tableArrStr[i])[0].target.el.remove()
+            emrDocument.getNodesByCode('pagebreak' + (i + 1))[0].target.el.remove();
+            break;
+          }
+        }
+      },
+      params: []
+    }
+  });
 }
 
-let blessing = `尊敬的各位长辈，亲爱的各位朋友们：
-    大家好！
-    今天是一个大喜的日子，对于我们全家人来讲也是一个开心且不舍的日子，因为我们家的“公主”，
-也就是我的姐姐，刘艳，她从此有了她的归属——李子威先生，在这个喜庆的日子里，他们喜结连理。
-    我想此刻既是两位新人幸福的时刻，也是我们在场各位长辈、朋友们幸福的时刻，因为我们共同
-见证了他们的幸福。我姐姐通情达理、心地善良，而我的姐夫也是阳光帅气、成熟稳重，最重要的是他
-们彼此相知相爱，相守相伴。
-    在这里，我先代表我们全家为他们送上祝福，祝你们新婚快乐，百年好合，希望你们能够在婚姻
-的路上相互扶持，共同成长。 家，是宁静的港湾，春风和煦，波澜不惊。作为家人，我相信你们一定
-能够关心、体贴、谅解对方，也相信你们一定能够孝敬双方父母，常回家看看。
-    最后，我要对我的姐姐说：”感谢你这么多年对我的关心和照顾“，对姐夫说：”一定要好好地照顾
-我姐姐！祝你们幸福！“`
-console.log(blessing.length)
-
-
+// 点击执行的代码
+function adDoc(me) {
+  let emrDocument = EMR.getDocument();
+  let tableArrStr = ['table1', 'table2', 'table3', 'table4'];
+  let table = emrDocument.getTablesByCode('table')[0].target;
+  for (let i = 0; i < tableArrStr.length; i++) {
+    if (!emrDocument.getTablesByCode(tableArrStr[i])[0]) {
+      let docObj = table.model.toJSON(true, true)
+      this.removeDate(docObj.children[1].children)
+      let pagebreak = {
+        type: "pagebreak",
+        code: "pagebreak" + (i + 1)
+      }
+      debugger;
+      docObj.code = tableArrStr[i]
+      docObj.children[1].children[1].children[7].code = ""
+      EMR.editor.setCursor('DOCUMENT_END')
+      EMR.editor.setEditorMode('free');
+      EMR.editor.execute("insertContents", { value: [pagebreak, docObj, { type: 'paragraph', children: [{ type: 'text', data: '' }] }] });
+      EMR.editor.setEditorMode('form');
+      break;
+    }
+  }
+}
+function removeDate(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].type == "checkfield" && arr[i].value) {
+      arr[i].value = false
+    } else if (arr[i].type == "smarttext" && arr[i].value) {
+      arr[i].value = ""
+      arr[i].children = []
+    }
+    if (arr[i].children && arr[i].children.length) {
+      this.removeDate(arr[i].children)
+    }
+  }
+}
